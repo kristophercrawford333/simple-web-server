@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"log/slog"
+	"math/rand/v2"
 	"net/http"
 	"os"
 	"os/signal"
@@ -46,13 +47,15 @@ func listenAndServe(servers ...*http.Server) {
 }
 
 func mainHandler(w http.ResponseWriter, r *http.Request) {
+	randomInt := rand.IntN(500)
 	hostname, err := os.Hostname()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+	time.Sleep(time.Duration(randomInt) * time.Millisecond)
 	w.WriteHeader(http.StatusAccepted)
 	fmt.Fprintf(w, "Hello from %s\n", hostname)
-	slog.Info("Handling request for", "path", r.RequestURI)
+	slog.Info("Handling request for", "path", r.RequestURI, "after_ms", randomInt)
 }
 
 func healthcheckHandler(w http.ResponseWriter, r *http.Request) {
