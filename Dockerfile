@@ -18,9 +18,4 @@ FROM scratch
 
 COPY --from=builder /app/simpleWebServer /
 
-# Expose service ports
-EXPOSE 80
-EXPOSE 8000
-
 CMD ["/simpleWebServer"]
-
