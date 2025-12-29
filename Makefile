@@ -7,7 +7,7 @@ REGISTRY ?= ghcr.io/kristophercrawford333/simple-web-server
 all: docker-build docker-push
 
 docker-build:
-	docker build --platform linux/amd64 -t $(IMAGE_NAME):$(IMAGE_TAG) -t $(REGISTRY):$(IMAGE_TAG) .
+	docker build --platform linux/amd64 --no-cache -t $(IMAGE_NAME):$(IMAGE_TAG) -t $(REGISTRY):$(IMAGE_TAG) .
 
 docker-push:
 	docker push $(REGISTRY):$(IMAGE_TAG)
