@@ -16,6 +16,8 @@ RUN go build -o simpleWebServer
 # Final stage
 FROM scratch
 
+LABEL org.opencontainers.image.description="A simple HTTP server written in Go with health check and main endpoints"
+
 COPY --from=builder /app/simpleWebServer /
 
 CMD ["/simpleWebServer"]
