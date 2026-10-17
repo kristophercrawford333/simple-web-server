@@ -12,7 +12,7 @@ WHITE  := $(shell tput -Txterm setaf 7)
 CYAN   := $(shell tput -Txterm setaf 6)
 RESET  := $(shell tput -Txterm sgr0)
 
-.PHONY: all test build docker-build docker-test clean
+.PHONY: all test build docker-build docker-test clean docker-roast
 
 all: help
 
@@ -54,12 +54,16 @@ docker-test: ## Build a docker image to run locally
 	docker build -t $(IMAGE_NAME):$(IMAGE_TAG) .
 
 docker-roast:
-	droast
+	@if command -v droast >/dev/null 2>&1; then \
+        droast; \
+    else \
+        echo "droast not installed; skipping"; \
+    fi
 
 ## Cleanup
 clean: ## Clean up old images, docker containers, build artifacts
-	@images=$$(docker image ls -q --filter "reference=$(IMAGE_NAME)"); if [ -n "$$images" ]; then docker image rm $$images; fi
 	@containers=$$(docker container ps -qa --filter "ancestor=$(IMAGE_NAME)"); if [ -n "$$containers" ]; then docker container rm -f $$containers; fi
+	@images=$$(docker image ls -q --filter "reference=$(IMAGE_NAME)"); if [ -n "$$images" ]; then docker image rm $$images; fi
 	rm -rf out/bin
 	rm -f report.json coverage.out
 
